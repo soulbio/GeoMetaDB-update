@@ -1,50 +1,95 @@
 # GEOmetaDB Database Update Tool
 
-This tool updates the GEOmetaDB SQLite database with missing GSE IDs and their comprehensive metadata.
+A Python utility developed by **SoulBio** to update the GEOmetaDB SQLite database with missing GEO Series (GSE) records, their associated samples (GSM), and relevant metadata.
+
+This project aims to help researchers work with more up-to-date GEO metadata while maintaining compatibility with the existing GEOmetaDB database structure.
+
+## Download Updated GEOmetaDB
+
+For researchers who need an updated database without running the update script, we've made our latest SQLite database available for download.
+
+**[Download the updated GEOmetaDB SQLite database (Google Drive)](https://drive.google.com/file/d/13rk1EiEItFYqtLN8mEOb1KudL2fSDLlQ/view?usp=sharing)**
+
+You can use this database directly with SQLite-compatible tools and existing GEOmetaDB workflows.
+
+Alternatively, you can use the update script below to update an existing database yourself.
 
 ## Features
 
-The tool updates three main tables in the GEOmetaDB SQLite database:
+The tool updates three main tables in the GEOmetaDB SQLite database.
 
-### 1. `gse` table
-Updates the following metadata for each GSE series:
+### 1. `gse` — GEO Series Metadata
+
+Adds missing GSE records with the following metadata:
+
 - `title`: Series title
-- `summary`: Series summary/description  
+- `summary`: Series description
 - `overall_design`: Overall experimental design
 - `pubmed_id`: Associated PubMed ID
 - `type`: Series type
 
-### 2. `gsm` table  
-Updates the following metadata for each GSM sample:
+### 2. `gsm` — GEO Sample Metadata
+
+Adds metadata for associated GSM samples:
+
 - `title`: Sample title
-- `source_name_ch1`: Source name
-- `gpl`: Platform ID
+- `source_name_ch1`: Sample source
+- `gpl`: Associated platform ID
 - `organism_ch1`: Organism information
 - `characteristics_ch1`: Sample characteristics
 
-### 3. `gse_gsm` table
-Creates relationships between GSE series and their GSM samples:
-- `gse`: GSE series ID
-- `gsm`: GSM sample ID
+### 3. `gse_gsm` — Series–Sample Relationships
+
+Maintains relationships between GEO Series and their associated samples:
+
+- `gse`: GSE Series ID
+- `gsm`: GSM Sample ID
 
 ## Usage
 
-### Command Line Usage
+### 1. Prepare the SQLite Database
+
+Download an existing GEOmetaDB SQLite database or use the updated database provided above.
+
+We recommend keeping a backup before running the update script.
+
+### 2. Run the Update Script
 
 ```bash
-python GEOmetaDB_update.py --sqlite_path /path/to/GeoMetaDB.sqlite 
+python GEOmetaDB_update.py --sqlite_path /path/to/GeoMetaDB.sqlite
 ```
 
-#### Optional Parameters:
-- `--batch_size 10`: Number of GSE IDs to process in each batch (default: 10)
-- `--delay 1.0`: Delay in seconds between API calls to avoid rate limiting (default: 1.0)
+### Optional Parameters
 
-### Example Usage:
+| Parameter | Description | Default |
+|---|---|---|
+| `--sqlite_path` | Path to the GEOmetaDB SQLite database | Required |
+| `--batch_size` | Number of GSE IDs processed per batch | `10` |
+| `--delay` | Delay in seconds between API calls to reduce rate limiting | `1.0` |
+
+### Examples
+
+**Basic usage:**
 
 ```bash
-# Basic usage
-python GEOmetaDB_update.py --sqlite_path ./GeoMetaDB.sqlite 
-
-# With custom batch size and delay
-python GEOmetaDB_update.py --sqlite_path ./GeoMetaDB.sqlite --batch_size 5 --delay 2.0
+python GEOmetaDB_update.py --sqlite_path ./GeoMetaDB.sqlite
 ```
+
+**Custom batch size and API delay:**
+
+```bash
+python GEOmetaDB_update.py \
+  --sqlite_path ./GeoMetaDB.sqlite \
+  --batch_size 5 \
+  --delay 2.0
+```
+
+## Contributing
+
+We welcome feedback, bug reports, and contributions from the research and open-source communities.
+
+If you encounter issues with metadata completeness, database compatibility, or the update process, please [open an issue](https://github.com/soulbio/GeoMetaDB-update/issues) or submit a pull request.
+
+## Maintained by SoulBio
+
+Developed by [SoulBio](https://github.com/soulbio) to support open-source bioinformatics tools and improve access to public biological research data.
